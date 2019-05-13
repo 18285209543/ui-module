@@ -3,11 +3,11 @@
     <div id="select" @click.stop="show()" ref="focus">
       <div class="def-content" v-show="!inputHide">请输入省/市/区</div>
       <div class="sel-input" v-show="inputHide">
-        <input type="text" ref="tabs1" readonly="true" v-model="tabs[0].name">
-        <span>/</span>
-        <input type="text" ref="tabs2" readonly="true" v-model="tabs[1].name">
-        <span>/</span>
-        <input type="text" ref="tabs3" readonly="true" v-model="tabs[2].name">
+        <span> {{tabs[0].name}} </span>
+        <label > / </label>
+        <span> {{tabs[1].name}} </span>
+        <label > / </label>
+        <span> {{tabs[2].name}} </span>
       </div>
       <img ref="showImg" :src="OptionImg">
     </div>
@@ -20,16 +20,17 @@
           :class="current === index ? 'active' : ''"
           :key="index"
         >
-          <span>{{item.name}}</span>
+          <span>{{item.name}} </span>
         </li>
       </ul>
       <ul class="tab-content">
-        <li v-for="(parent, index) in tabCentent" v-show="current === index" :key="index">
+        <li v-for="(parent, index) in oArray" v-show="current === index" :key="index">
           <div v-for="(child, cIndex) in parent.childList" :key="child.index">
             <span
               @click="tabSeleted(cIndex), tabItem(child)"
               :class="curChild === cIndex ? 'bg-active' : ''"
-            >{{child}}</span>
+            >{{child}}
+            </span>
           </div>
         </li>
       </ul>
@@ -38,12 +39,13 @@
 </template>
 
 <script>
+
 import OptionImg from "./static/option.png";
 
 export default {
   name: "HelloWorld",
   props: {
-    msg: String
+    oArray: Array 
   },
   data() {
     return {
@@ -55,24 +57,6 @@ export default {
         { name: " 省份", showData: true },
         { name: "城市", showData: false },
         { name: "县区", showData: false }
-      ],
-      tabCentent: [
-        {
-          childList: [
-            "贵州省我是都",
-            "广东省",
-            "浙江省",
-            "贵州省",
-            "贵州省",
-            "贵州省"
-          ]
-        },
-        {
-          childList: ["遵义市", "仁怀市", "平安县", "遵义市", "遵义市"]
-        },
-        {
-          childList: ["习水县", "习水县", "红花岗区", "红花岗区", "红花岗区"]
-        }
       ],
       // tab导航当前下标
       current: 0,
@@ -107,9 +91,6 @@ export default {
 
     // 控制内容
     tabItem(item) {
-      // 改变tab-input的宽度
-      this.$refs.tabs1.style.width = this.$refs.tabs1.value.length * 20 + "px";
-
       // 把选中的内容赋值给tab导航title
       this.tabs[this.current].name = item;
 
@@ -127,18 +108,23 @@ export default {
             this.tabs[i].name = "县区";
           }
         }
-
+       
         // 打开下一个列表
         this.current = this.current + 1;
         this.inputHide = true;
+
       } else if (this.current === 1) {
+
         this.tabs[this.current + 1].name = "县区";
         this.current = this.current + 1;
+
       } else if (this.current === 2) {
+
         // 选中后让tab内容隐藏
         this.contentHide = false;
         this.$refs.focus.style.border = "1px solid #bbbbbb";
         this.$refs.showImg.style.transform = "rotate(360deg)";
+
       }
     }
   },
@@ -194,14 +180,13 @@ html, body, div, ul, li, h1, h2, h3, h4, h5, h6, p, form, input, textarea, th, t
     width: 95%;
     height: 100%;
     text-align: left;
-
-    input {
-      width: 16%;
+    line-height 50px;
+    span  {
       height: 100%;
       font-size: 18px;
-      border: none;
+
+      padding 0px 5px
       text-align: center;
-      outline: none;
       cursor: pointer;
       user-select: none;
     }
